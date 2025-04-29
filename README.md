@@ -1,0 +1,2 @@
+# BengtClip
+Clip manager
