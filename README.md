@@ -2,8 +2,7 @@
 
 **BengtClip** is a minimal macOS menubar clipboard manager built with Python and Rumps. It stores your clipboard history, lets you quickly access recent items, and supports persistent history across reboots.
 
-![logo](app/resources/Bengt_Logo_rainbow.png)
-
+<img src="app/resources/Bengt_Logo_rainbow.png" alt="drawing" width="200"/>
 ---
 
 ## Features
@@ -27,7 +26,7 @@
 ## Run from Source
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/BengtClip.git
+git clone https://github.com/isakhertin/BengtClip.git
 cd BengtClip
 python3 -m venv venv
 source venv/bin/activate

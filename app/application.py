@@ -36,19 +36,30 @@ class Application(rumps.App):
         self.timer.start()
 
     def setup_clipboard_items(self) -> None:
-        # Remove existing items
+        # First, remove all previously added clipboard items and the separator
         for item in self.clipboard_items:
-            self.menu.pop(item.title, None)
-        self.clipboard_items.clear()
-        self.menu.pop("separator", None)
+            try:
+                del self.menu[item.title]
+            except KeyError:
+                pass
 
-        # Insert items
+        # Remove any lingering separator (None) if it exists
+        keys_to_remove = [key for key, val in self.menu.items() if val is None]
+        for key in keys_to_remove:
+            del self.menu[key]
+
+        # Clear internal list
+        self.clipboard_items.clear()
+
+        # Add fresh clipboard items
         for i in range(self.max_row):
             item = rumps.MenuItem(f"{i+1}. (empty)", callback=self.make_copy_callback(i))
             self.clipboard_items.append(item)
             self.menu.insert_before("Max Rows", item)
 
-        self.menu.insert_before("Max Rows", None )
+        # Add a new separator
+        self.menu.insert_before("Max Rows", None)
+
         self.refresh_menu_titles()
 
     def make_copy_callback(self, index: int) -> None:
