@@ -1,0 +1,10 @@
+altgraph==0.17.4
+macholib==1.16.3
+modulegraph==0.19.6
+packaging==25.0
+py2app==0.28.8
+pyobjc-core==11.0
+pyobjc-framework-Cocoa==11.0
+pyperclip==1.9.0
+rumps==0.4.0
+setuptools==80.0.0
