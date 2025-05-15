@@ -1,7 +1,7 @@
 from setuptools import setup
 
 APP = ['BengtClip.py']  # Your main entry file
-DATA_FILES = ['resources/BengtClip_white.icns']
+DATA_FILES = [('resources', ['resources/BengtClip_white.icns'])]
 OPTIONS = {
     'argv_emulation': False,
     'iconfile': 'resources/BengtClip_white.icns', 

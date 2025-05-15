@@ -2,6 +2,7 @@ import rumps
 import pyperclip
 import os
 import json
+from AppKit import NSPasteboard, NSPasteboardTypePNG, NSPasteboardTypeTIFF
 
 HISTORY_FILE = os.path.expanduser("~/.clipboard_history.json")
 MAX_ROW_OPTIONS = [5, 10, 20, 30]
@@ -53,7 +54,11 @@ class Application(rumps.App):
 
         # Add fresh clipboard items
         for i in range(self.max_row):
-            item = rumps.MenuItem(f"{i+1}. (empty)", callback=self.make_copy_callback(i))
+            shortcut = f"@{i+1}" if i < 9 else None
+            item = rumps.MenuItem(f"{i+1}. (empty)", 
+                                  callback=self.make_copy_callback(i), 
+                                  key=shortcut)
+            
             self.clipboard_items.append(item)
             self.menu.insert_before("Max Rows", item)
 
@@ -78,10 +83,26 @@ class Application(rumps.App):
         return set_rows
 
     def check_clipboard(self, _) -> None:
+
+        def is_image_in_clipboard() -> bool:
+            clipboard = NSPasteboard.generalPasteboard()
+            image_types = [NSPasteboardTypePNG, NSPasteboardTypeTIFF]
+            return clipboard.availableTypeFromArray_(image_types) is not None
+    
+        if is_image_in_clipboard():
+            #is image -> do nothing
+            return
+
         content = pyperclip.paste().strip()
-        if content and content != self.last_clipboard:
-            self.last_clipboard = content
-            self.add_to_history(content)
+        try:        
+            if content and content != self.last_clipboard:
+                self.last_clipboard = content
+                self.add_to_history(content)
+        
+        except ValueError as e:
+            print(f"Error: {e}")
+            return
+        
 
     def add_to_history(self, content) -> None:
         if content in self.history:
@@ -104,11 +125,11 @@ class Application(rumps.App):
                 with open(HISTORY_FILE, "r") as f:
                     data = json.load(f)
                     history = data.get("history", [])
-                    max_row = data.get("max_row", 10)
+                    max_row = data.get("max_row", MAX_ROW_OPTIONS[-1])
                     return history[:max_row], max_row
             except Exception:
                 pass
-        return [], 10
+        return [], MAX_ROW_OPTIONS[-1]
 
     def save_data(self) -> None:
         try:
